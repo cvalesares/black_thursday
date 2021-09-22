@@ -151,8 +151,8 @@ RSpec.describe SalesAnalyst do
   end
 
   it 'invoices_per_date' do
-    date1 = Time.parse("2009-02-07")
-    date2 = Time.parse("2014-02-08")
+    date1 = ("2009-02-07")
+    date2 = ("2014-02-08")
     expected1 = @sales_analyst.total_revenue_by_date(date1)
     expected2 = @sales_analyst.total_revenue_by_date(date2)
 
