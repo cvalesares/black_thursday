@@ -114,8 +114,7 @@ class SalesAnalyst
     weekdays = Hash.new(0)
     @invoices.all.find_all do |invoice|
       day = invoice.created_at.strftime('%A')
-      if weekdays[day] += 1
-      end
+      weekdays[day] += 1
     end
     weekdays
   end
@@ -174,7 +173,7 @@ class SalesAnalyst
   def invoice_total(invoice_id)
     total = 0
     test = succesful_invoices(invoice_id)
-    if test != nil
+    unless test.nil?
       test.each do |invoice|
         total += (invoice.quantity * invoice.unit_price)
       end
@@ -183,11 +182,9 @@ class SalesAnalyst
   end
 
   def searches_date(date)
-   this = []
-   @invoices.all.find_all do |invoice|
-     if invoice.created_at == date
-       this << invoice.id
-     end
+    this = []
+    @invoices.all.find_all do |invoice|
+      this << invoice.id if invoice.created_at.strftime('%Y-%m-%d') == date
     end
     this
   end
@@ -199,11 +196,11 @@ class SalesAnalyst
   end
 
   def top_revenue_earners_helper_helper
-    merchant_invoices = Hash.new
+    merchant_invoices = {}
     @invoices.all.each do |invoice|
-        if merchant_invoices[invoice.merchant_id].nil?
-          merchant_invoices[invoice.merchant_id] = [invoice.id]
-        else merchant_invoices[invoice.merchant_id] << invoice.id
+      if merchant_invoices[invoice.merchant_id].nil?
+        merchant_invoices[invoice.merchant_id] = [invoice.id]
+      else merchant_invoices[invoice.merchant_id] << invoice.id
       end
     end
     merchant_invoices
@@ -216,21 +213,21 @@ class SalesAnalyst
         rev_hash[key] += invoice_total(value)
       end
     end
-    array = rev_hash.sort_by { |key, value | value}.reverse
+    array = rev_hash.sort_by { |_key, value| value }.reverse
   end
 
-#We didn't end up using this method,
-# but I liked the name too much to get rid of it
+  # We didn't end up using this method,
+  # but I liked the name too much to get rid of it
 
   # def this_isnt_even_my_final_method(x = 20)
-    # if x == nil
-    #   top_revenue_earners_helper[0..19]
-    # else
-    # end
+  # if x == nil
+  #   top_revenue_earners_helper[0..19]
+  # else
+  # end
   # end
 
   def top_revenue_earners(x = 20)
-    slh = top_revenue_earners_helper[0..(x-1)]
+    slh = top_revenue_earners_helper[0..(x - 1)]
     slh.map do |earner, _|
       @merchants.find_by_id(earner)
     end

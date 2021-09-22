@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'csv'
 require_relative './sales_engine'
 
@@ -9,6 +10,7 @@ class Invoice
                 :created_at
   attr_accessor :status,
                 :updated_at
+
   def initialize(data)
     @id          = data[0].to_i
     @customer_id = data[1].to_i
